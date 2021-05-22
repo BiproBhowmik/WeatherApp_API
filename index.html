@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App - JavaScript</title>
+    <link rel="stylesheet" href="font/Rimouski.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="app-title">
+            <p>Weather</p>
+        </div>
+        <div class="notification"> </div>
+        <div class="weather-container">
+            <div class="weather-icon">
+                <img src="icons/unknown.png" alt="">
+            </div>
+            <div class="temperature-value">
+                <p>- °<span>C</span></p>
+            </div>
+            <div class="temperature-description">
+                <p> - </p>
+            </div>
+            <div class="location">
+                <p>-</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- <script src="app.js"></script> -->
+    <script>
+
+        // SELECT ELEMENTS
+const iconElement = document.querySelector(".weather-icon");
+const tempElement = document.querySelector(".temperature-value p");
+const descElement = document.querySelector(".temperature-description p");
+const locationElement = document.querySelector(".location p");
+const notificationElement = document.querySelector(".notification");
+
+// APP CONSTS AND VARS
+const KELVIN = 273;
+// API KEY
+const key = "da932d715fb385fc6df17bda1e3cd42c";
+
+        var latitude;
+        var longitude;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+
+        function showPosition(position) {
+          latitude =  position.coords.latitude;
+          longitude=  position.coords.longitude;
+          wather();
+      }
+
+      function wather() {
+
+        // console.log(latitude);
+        // console.log(longitude);
+
+        fetch('https://api.openweathermap.org/data/2.5/weather?lat='+latitude+'&lon='+longitude+'&appid=da932d715fb385fc6df17bda1e3cd42c')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            console.log(data.name);
+            locationElement.innerHTML = data.name+", "+data.sys.country;
+            descElement.innerHTML = data.weather[0].description;
+            tempElement.innerHTML = Math.floor(data.main.temp-272.15)+'°<span>C</span>';
+            iconElement.innerHTML = '<img src="icons/'+data.weather[0].icon+'.png"/>';
+            // notificationElement.innerHTML = data.name;
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
+
+
+
+</script>
+</body>
+</html>
+
+
